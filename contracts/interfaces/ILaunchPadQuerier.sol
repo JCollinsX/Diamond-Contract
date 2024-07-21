@@ -23,13 +23,7 @@ interface ILaunchPadQuerier is ILaunchPadCommon {
 
     function getSignerAddress() external view returns (address);
 
-    function getSuperChargerHeadstartByTier(uint256 tier) external view returns (uint256);
-
-    function getSuperChargerHeadstarts() external view returns (uint256[] memory);
-
-    function getSuperChargerMultiplierByTier(uint256 tier) external view returns (uint256);
-
-    function getSuperChargerTokensPercByTier(uint256 tier) external view returns (uint256);
+    function getHeadstartByTier(uint256 tier) external view returns (uint256);
 
     function getLaunchPadTokenInfo(address launchPadAddress) external view returns (CreateErc20Input memory createErc20Input);
 

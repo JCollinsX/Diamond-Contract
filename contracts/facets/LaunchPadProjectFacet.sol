@@ -199,11 +199,6 @@ contract LaunchPadProjectFacet is ILaunchPadProject, ReentrancyGuard, Pausable, 
         return ds.investors[index];
     }
 
-    function isSuperchargerEnabled() external view override returns (bool) {
-        LibLaunchPadProjectStorage.DiamondStorage storage ds = LibLaunchPadProjectStorage.diamondStorage();
-        return ds.isSuperchargerEnabled;
-    }
-
     /// builds a prefixed hash to mimic the behavior of eth_sign.
     function _prefixed(bytes32 hash) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
@@ -239,17 +234,10 @@ contract LaunchPadProjectFacet is ILaunchPadProject, ReentrancyGuard, Pausable, 
     }
 
     /** MODIFIER */
-
-    modifier onlySupercharger() {
-        LibLaunchPadProjectStorage.DiamondStorage storage ds = LibLaunchPadProjectStorage.diamondStorage();
-        require(ds.isSuperchargerEnabled, "LaunchPad:onlySupercharger: Supercharger is not enabled");
-        _;
-    }
-
     modifier whenSaleInProgress(uint256 tier) {
         LibLaunchPadProjectStorage.DiamondStorage storage ds = LibLaunchPadProjectStorage.diamondStorage();
         require(tier > 0, "LaunchPad:whenSaleInProgress: Tier must be greater than 0");
-        uint256 headstart = ILaunchPadQuerier(ds.launchPadFactory).getSuperChargerHeadstartByTier(tier);
+        uint256 headstart = ILaunchPadQuerier(ds.launchPadFactory).getHeadstartByTier(tier);
         uint256 startTimestamp = ds.launchPadInfo.startTimestamp - headstart;
         require(
             block.timestamp >= startTimestamp && block.timestamp <= ds.launchPadInfo.startTimestamp.add(ds.launchPadInfo.duration),

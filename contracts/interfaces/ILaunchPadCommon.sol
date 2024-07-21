@@ -60,7 +60,6 @@ interface ILaunchPadCommon {
         ReleaseScheduleV2[] releaseSchedule;
         CreateErc20Input createErc20Input;
         address referrer;
-        bool isSuperchargerEnabled;
         uint256 feePercentage;
         address paymentTokenAddress;
     }

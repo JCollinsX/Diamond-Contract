@@ -18,7 +18,6 @@ library LibLaunchPadProjectStorage {
         uint256 totalTokensClaimed;
         uint256 feePercentage; // in basis points 1e4
         bool feeShareCollected;
-        bool isSuperchargerEnabled;
         ILaunchPadCommon.ReleaseSchedule[] releaseSchedule;
         ILaunchPadCommon.ReleaseScheduleV2[] releaseScheduleV2;
         mapping(address => ILaunchPadProject.PurchasedInfo) purchasedInfoByUser;

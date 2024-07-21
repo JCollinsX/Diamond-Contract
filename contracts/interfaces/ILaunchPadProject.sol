@@ -52,8 +52,6 @@ interface ILaunchPadProject {
 
     function getTotalRaised() external view returns (uint256);
 
-    function isSuperchargerEnabled() external view returns (bool);
-
     function recoverSigner(bytes32 message, bytes memory signature) external view returns (address);
 
     function tokenDecimals() external view returns (uint256);
