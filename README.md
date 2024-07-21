@@ -6,8 +6,6 @@ The standard loupe functions have been gas-optimized in this implementation and 
 
 The `contracts/facets/LaunchPadProjectFacet.sol` file shows an launchpad contract with Diamond implementation.
 
-The `contracts/facets/DiamondLoupeFacet.sol` file shows how to implement the four standard loupe functions.
-
 The `contracts/libraries/LibLaunchPadProjectStorage.sol` file shows how to implement Diamond Storage.
 
 ## Calling Diamond Functions
