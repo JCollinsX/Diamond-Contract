@@ -1,0 +1,981 @@
+{
+  "contractName": "IDiamondCut",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "facetAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "enum IDiamondCut.FacetCutAction",
+              "name": "action",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes4[]",
+              "name": "functionSelectors",
+              "type": "bytes4[]"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct IDiamondCut.FacetCut[]",
+          "name": "_diamondCut",
+          "type": "tuple[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_init",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "_calldata",
+          "type": "bytes"
+        }
+      ],
+      "name": "DiamondCut",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "facetAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "enum IDiamondCut.FacetCutAction",
+              "name": "action",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes4[]",
+              "name": "functionSelectors",
+              "type": "bytes4[]"
+            }
+          ],
+          "internalType": "struct IDiamondCut.FacetCut[]",
+          "name": "_diamondCut",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "address",
+          "name": "_init",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_calldata",
+          "type": "bytes"
+        }
+      ],
+      "name": "diamondCut",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"facetAddress\",\"type\":\"address\"},{\"internalType\":\"enum IDiamondCut.FacetCutAction\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"bytes4[]\",\"name\":\"functionSelectors\",\"type\":\"bytes4[]\"}],\"indexed\":false,\"internalType\":\"struct IDiamondCut.FacetCut[]\",\"name\":\"_diamondCut\",\"type\":\"tuple[]\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_init\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"_calldata\",\"type\":\"bytes\"}],\"name\":\"DiamondCut\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"facetAddress\",\"type\":\"address\"},{\"internalType\":\"enum IDiamondCut.FacetCutAction\",\"name\":\"action\",\"type\":\"uint8\"},{\"internalType\":\"bytes4[]\",\"name\":\"functionSelectors\",\"type\":\"bytes4[]\"}],\"internalType\":\"struct IDiamondCut.FacetCut[]\",\"name\":\"_diamondCut\",\"type\":\"tuple[]\"},{\"internalType\":\"address\",\"name\":\"_init\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_calldata\",\"type\":\"bytes\"}],\"name\":\"diamondCut\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"diamondCut((address,uint8,bytes4[])[],address,bytes)\":{\"params\":{\"_calldata\":\"A function call, including function selector and arguments                  _calldata is executed with delegatecall on _init\",\"_diamondCut\":\"Contains the facet addresses and function selectors\",\"_init\":\"The address of the contract or facet to execute _calldata\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"diamondCut((address,uint8,bytes4[])[],address,bytes)\":{\"notice\":\"Add/replace/remove any number of functions and optionally execute         a function with delegatecall\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interfaces/IDiamondCut.sol\":\"IDiamondCut\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":9000000},\"remappings\":[]},\"sources\":{\"project:/contracts/interfaces/IDiamondCut.sol\":{\"keccak256\":\"0xfb3c1af58cd19e1e49f065e33c7c68045ce451c3e16920614979624c44faf892\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2911ef24e7e450ba172b9ffeb7817b91a1922e520bba5cf54db75b2b736de523\",\"dweb:/ipfs/QmdojbEd4q88o1n1o8A4bh7M98SmgegCNktFJBacjpPHy5\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.7.6;\npragma experimental ABIEncoderV2;\n\n/******************************************************************************\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\n/******************************************************************************/\n\ninterface IDiamondCut {\n    enum FacetCutAction {Add, Replace, Remove}\n    // Add=0, Replace=1, Remove=2\n\n    struct FacetCut {\n        address facetAddress;\n        FacetCutAction action;\n        bytes4[] functionSelectors;\n    }\n\n    /// @notice Add/replace/remove any number of functions and optionally execute\n    ///         a function with delegatecall\n    /// @param _diamondCut Contains the facet addresses and function selectors\n    /// @param _init The address of the contract or facet to execute _calldata\n    /// @param _calldata A function call, including function selector and arguments\n    ///                  _calldata is executed with delegatecall on _init\n    function diamondCut(\n        FacetCut[] calldata _diamondCut,\n        address _init,\n        bytes calldata _calldata\n    ) external;\n\n    event DiamondCut(FacetCut[] _diamondCut, address _init, bytes _calldata);\n}\n",
+  "sourcePath": "/home/aaa/Documents/DeFi-Contract/contracts/interfaces/IDiamondCut.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/IDiamondCut.sol",
+    "exportedSymbols": {
+      "IDiamondCut": [
+        654
+      ]
+    },
+    "id": 655,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 620,
+        "literals": [
+          "solidity",
+          "^",
+          "0.7",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:7"
+      },
+      {
+        "id": 621,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "56:33:7"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 654,
+        "linearizedBaseContracts": [
+          654
+        ],
+        "name": "IDiamondCut",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IDiamondCut.FacetCutAction",
+            "id": 625,
+            "members": [
+              {
+                "id": 622,
+                "name": "Add",
+                "nodeType": "EnumValue",
+                "src": "453:3:7"
+              },
+              {
+                "id": 623,
+                "name": "Replace",
+                "nodeType": "EnumValue",
+                "src": "458:7:7"
+              },
+              {
+                "id": 624,
+                "name": "Remove",
+                "nodeType": "EnumValue",
+                "src": "467:6:7"
+              }
+            ],
+            "name": "FacetCutAction",
+            "nodeType": "EnumDefinition",
+            "src": "432:42:7"
+          },
+          {
+            "canonicalName": "IDiamondCut.FacetCut",
+            "id": 633,
+            "members": [
+              {
+                "constant": false,
+                "id": 627,
+                "mutability": "mutable",
+                "name": "facetAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 633,
+                "src": "540:20:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 626,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "540:7:7",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 629,
+                "mutability": "mutable",
+                "name": "action",
+                "nodeType": "VariableDeclaration",
+                "scope": 633,
+                "src": "570:21:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_FacetCutAction_$625",
+                  "typeString": "enum IDiamondCut.FacetCutAction"
+                },
+                "typeName": {
+                  "id": 628,
+                  "name": "FacetCutAction",
+                  "nodeType": "UserDefinedTypeName",
+                  "referencedDeclaration": 625,
+                  "src": "570:14:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_FacetCutAction_$625",
+                    "typeString": "enum IDiamondCut.FacetCutAction"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 632,
+                "mutability": "mutable",
+                "name": "functionSelectors",
+                "nodeType": "VariableDeclaration",
+                "scope": 633,
+                "src": "601:26:7",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_bytes4_$dyn_storage_ptr",
+                  "typeString": "bytes4[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "id": 630,
+                    "name": "bytes4",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "601:6:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
+                    }
+                  },
+                  "id": 631,
+                  "nodeType": "ArrayTypeName",
+                  "src": "601:8:7",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bytes4_$dyn_storage_ptr",
+                    "typeString": "bytes4[]"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "FacetCut",
+            "nodeType": "StructDefinition",
+            "scope": 654,
+            "src": "514:120:7",
+            "visibility": "public"
+          },
+          {
+            "documentation": {
+              "id": 634,
+              "nodeType": "StructuredDocumentation",
+              "src": "640:438:7",
+              "text": "@notice Add/replace/remove any number of functions and optionally execute\n         a function with delegatecall\n @param _diamondCut Contains the facet addresses and function selectors\n @param _init The address of the contract or facet to execute _calldata\n @param _calldata A function call, including function selector and arguments\n                  _calldata is executed with delegatecall on _init"
+            },
+            "functionSelector": "1f931c1c",
+            "id": 644,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "diamondCut",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 642,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 637,
+                  "mutability": "mutable",
+                  "name": "_diamondCut",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 644,
+                  "src": "1112:31:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_FacetCut_$633_calldata_ptr_$dyn_calldata_ptr",
+                    "typeString": "struct IDiamondCut.FacetCut[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 635,
+                      "name": "FacetCut",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 633,
+                      "src": "1112:8:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_FacetCut_$633_storage_ptr",
+                        "typeString": "struct IDiamondCut.FacetCut"
+                      }
+                    },
+                    "id": 636,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1112:10:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_FacetCut_$633_storage_$dyn_storage_ptr",
+                      "typeString": "struct IDiamondCut.FacetCut[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 639,
+                  "mutability": "mutable",
+                  "name": "_init",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 644,
+                  "src": "1153:13:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 638,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1153:7:7",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 641,
+                  "mutability": "mutable",
+                  "name": "_calldata",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 644,
+                  "src": "1176:24:7",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 640,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1176:5:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1102:104:7"
+            },
+            "returnParameters": {
+              "id": 643,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1215:0:7"
+            },
+            "scope": 654,
+            "src": "1083:133:7",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "anonymous": false,
+            "id": 653,
+            "name": "DiamondCut",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 652,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 647,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "_diamondCut",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 653,
+                  "src": "1239:22:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_FacetCut_$633_memory_ptr_$dyn_memory_ptr",
+                    "typeString": "struct IDiamondCut.FacetCut[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 645,
+                      "name": "FacetCut",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 633,
+                      "src": "1239:8:7",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_FacetCut_$633_storage_ptr",
+                        "typeString": "struct IDiamondCut.FacetCut"
+                      }
+                    },
+                    "id": 646,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1239:10:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_FacetCut_$633_storage_$dyn_storage_ptr",
+                      "typeString": "struct IDiamondCut.FacetCut[]"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 649,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "_init",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 653,
+                  "src": "1263:13:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 648,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1263:7:7",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 651,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "_calldata",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 653,
+                  "src": "1278:15:7",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 650,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1278:5:7",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1238:56:7"
+            },
+            "src": "1222:73:7"
+          }
+        ],
+        "scope": 655,
+        "src": "404:893:7"
+      }
+    ],
+    "src": "32:1266:7"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/interfaces/IDiamondCut.sol",
+      "exportedSymbols": {
+        "IDiamondCut": [
+          654
+        ]
+      },
+      "license": "MIT"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.7",
+            ".6"
+          ]
+        },
+        "id": 620,
+        "name": "PragmaDirective",
+        "src": "32:23:7"
+      },
+      {
+        "attributes": {
+          "literals": [
+            "experimental",
+            "ABIEncoderV2"
+          ]
+        },
+        "id": 621,
+        "name": "PragmaDirective",
+        "src": "56:33:7"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            654
+          ],
+          "name": "IDiamondCut",
+          "scope": 655
+        },
+        "children": [
+          {
+            "attributes": {
+              "canonicalName": "IDiamondCut.FacetCutAction",
+              "name": "FacetCutAction"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "name": "Add"
+                },
+                "id": 622,
+                "name": "EnumValue",
+                "src": "453:3:7"
+              },
+              {
+                "attributes": {
+                  "name": "Replace"
+                },
+                "id": 623,
+                "name": "EnumValue",
+                "src": "458:7:7"
+              },
+              {
+                "attributes": {
+                  "name": "Remove"
+                },
+                "id": 624,
+                "name": "EnumValue",
+                "src": "467:6:7"
+              }
+            ],
+            "id": 625,
+            "name": "EnumDefinition",
+            "src": "432:42:7"
+          },
+          {
+            "attributes": {
+              "canonicalName": "IDiamondCut.FacetCut",
+              "name": "FacetCut",
+              "scope": 654,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "mutability": "mutable",
+                  "name": "facetAddress",
+                  "scope": 633,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address",
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "nonpayable",
+                      "type": "address"
+                    },
+                    "id": 626,
+                    "name": "ElementaryTypeName",
+                    "src": "540:7:7"
+                  }
+                ],
+                "id": 627,
+                "name": "VariableDeclaration",
+                "src": "540:20:7"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "mutability": "mutable",
+                  "name": "action",
+                  "scope": 633,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "enum IDiamondCut.FacetCutAction",
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "FacetCutAction",
+                      "referencedDeclaration": 625,
+                      "type": "enum IDiamondCut.FacetCutAction"
+                    },
+                    "id": 628,
+                    "name": "UserDefinedTypeName",
+                    "src": "570:14:7"
+                  }
+                ],
+                "id": 629,
+                "name": "VariableDeclaration",
+                "src": "570:21:7"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "mutability": "mutable",
+                  "name": "functionSelectors",
+                  "scope": 633,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "bytes4[]",
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "type": "bytes4[]"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes4",
+                          "type": "bytes4"
+                        },
+                        "id": 630,
+                        "name": "ElementaryTypeName",
+                        "src": "601:6:7"
+                      }
+                    ],
+                    "id": 631,
+                    "name": "ArrayTypeName",
+                    "src": "601:8:7"
+                  }
+                ],
+                "id": 632,
+                "name": "VariableDeclaration",
+                "src": "601:26:7"
+              }
+            ],
+            "id": 633,
+            "name": "StructDefinition",
+            "src": "514:120:7"
+          },
+          {
+            "attributes": {
+              "functionSelector": "1f931c1c",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "diamondCut",
+              "scope": 654,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": "@notice Add/replace/remove any number of functions and optionally execute\n         a function with delegatecall\n @param _diamondCut Contains the facet addresses and function selectors\n @param _init The address of the contract or facet to execute _calldata\n @param _calldata A function call, including function selector and arguments\n                  _calldata is executed with delegatecall on _init"
+                },
+                "id": 634,
+                "name": "StructuredDocumentation",
+                "src": "640:438:7"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_diamondCut",
+                      "scope": 644,
+                      "stateVariable": false,
+                      "storageLocation": "calldata",
+                      "type": "struct IDiamondCut.FacetCut[]",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "struct IDiamondCut.FacetCut[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "FacetCut",
+                              "referencedDeclaration": 633,
+                              "type": "struct IDiamondCut.FacetCut"
+                            },
+                            "id": 635,
+                            "name": "UserDefinedTypeName",
+                            "src": "1112:8:7"
+                          }
+                        ],
+                        "id": 636,
+                        "name": "ArrayTypeName",
+                        "src": "1112:10:7"
+                      }
+                    ],
+                    "id": 637,
+                    "name": "VariableDeclaration",
+                    "src": "1112:31:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_init",
+                      "scope": 644,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 638,
+                        "name": "ElementaryTypeName",
+                        "src": "1153:7:7"
+                      }
+                    ],
+                    "id": 639,
+                    "name": "VariableDeclaration",
+                    "src": "1153:13:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_calldata",
+                      "scope": 644,
+                      "stateVariable": false,
+                      "storageLocation": "calldata",
+                      "type": "bytes",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes",
+                          "type": "bytes"
+                        },
+                        "id": 640,
+                        "name": "ElementaryTypeName",
+                        "src": "1176:5:7"
+                      }
+                    ],
+                    "id": 641,
+                    "name": "VariableDeclaration",
+                    "src": "1176:24:7"
+                  }
+                ],
+                "id": 642,
+                "name": "ParameterList",
+                "src": "1102:104:7"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 643,
+                "name": "ParameterList",
+                "src": "1215:0:7"
+              }
+            ],
+            "id": 644,
+            "name": "FunctionDefinition",
+            "src": "1083:133:7"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "name": "DiamondCut"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "mutability": "mutable",
+                      "name": "_diamondCut",
+                      "scope": 653,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "struct IDiamondCut.FacetCut[]",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "struct IDiamondCut.FacetCut[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "FacetCut",
+                              "referencedDeclaration": 633,
+                              "type": "struct IDiamondCut.FacetCut"
+                            },
+                            "id": 645,
+                            "name": "UserDefinedTypeName",
+                            "src": "1239:8:7"
+                          }
+                        ],
+                        "id": 646,
+                        "name": "ArrayTypeName",
+                        "src": "1239:10:7"
+                      }
+                    ],
+                    "id": 647,
+                    "name": "VariableDeclaration",
+                    "src": "1239:22:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "mutability": "mutable",
+                      "name": "_init",
+                      "scope": 653,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 648,
+                        "name": "ElementaryTypeName",
+                        "src": "1263:7:7"
+                      }
+                    ],
+                    "id": 649,
+                    "name": "VariableDeclaration",
+                    "src": "1263:13:7"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "mutability": "mutable",
+                      "name": "_calldata",
+                      "scope": 653,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes",
+                          "type": "bytes"
+                        },
+                        "id": 650,
+                        "name": "ElementaryTypeName",
+                        "src": "1278:5:7"
+                      }
+                    ],
+                    "id": 651,
+                    "name": "VariableDeclaration",
+                    "src": "1278:15:7"
+                  }
+                ],
+                "id": 652,
+                "name": "ParameterList",
+                "src": "1238:56:7"
+              }
+            ],
+            "id": 653,
+            "name": "EventDefinition",
+            "src": "1222:73:7"
+          }
+        ],
+        "id": 654,
+        "name": "ContractDefinition",
+        "src": "404:893:7"
+      }
+    ],
+    "id": 655,
+    "name": "SourceUnit",
+    "src": "32:1266:7"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.6+commit.7338295f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.16",
+  "updatedAt": "2024-07-21T15:16:48.201Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "diamondCut((address,uint8,bytes4[])[],address,bytes)": {
+        "params": {
+          "_calldata": "A function call, including function selector and arguments                  _calldata is executed with delegatecall on _init",
+          "_diamondCut": "Contains the facet addresses and function selectors",
+          "_init": "The address of the contract or facet to execute _calldata"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "diamondCut((address,uint8,bytes4[])[],address,bytes)": {
+        "notice": "Add/replace/remove any number of functions and optionally execute         a function with delegatecall"
+      }
+    },
+    "version": 1
+  }
+}

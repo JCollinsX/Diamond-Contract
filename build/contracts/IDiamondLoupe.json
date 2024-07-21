@@ -1,0 +1,1103 @@
+{
+  "contractName": "IDiamondLoupe",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "facets",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "facetAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes4[]",
+              "name": "functionSelectors",
+              "type": "bytes4[]"
+            }
+          ],
+          "internalType": "struct IDiamondLoupe.Facet[]",
+          "name": "facets_",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_facet",
+          "type": "address"
+        }
+      ],
+      "name": "facetFunctionSelectors",
+      "outputs": [
+        {
+          "internalType": "bytes4[]",
+          "name": "facetFunctionSelectors_",
+          "type": "bytes4[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "facetAddresses",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "facetAddresses_",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "_functionSelector",
+          "type": "bytes4"
+        }
+      ],
+      "name": "facetAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "facetAddress_",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_functionSelector\",\"type\":\"bytes4\"}],\"name\":\"facetAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"facetAddress_\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facetAddresses\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"facetAddresses_\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_facet\",\"type\":\"address\"}],\"name\":\"facetFunctionSelectors\",\"outputs\":[{\"internalType\":\"bytes4[]\",\"name\":\"facetFunctionSelectors_\",\"type\":\"bytes4[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"facets\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"facetAddress\",\"type\":\"address\"},{\"internalType\":\"bytes4[]\",\"name\":\"functionSelectors\",\"type\":\"bytes4[]\"}],\"internalType\":\"struct IDiamondLoupe.Facet[]\",\"name\":\"facets_\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"facetAddress(bytes4)\":{\"details\":\"If facet is not found return address(0).\",\"params\":{\"_functionSelector\":\"The function selector.\"},\"returns\":{\"facetAddress_\":\"The facet address.\"}},\"facetAddresses()\":{\"returns\":{\"facetAddresses_\":\"facetAddresses_\"}},\"facetFunctionSelectors(address)\":{\"params\":{\"_facet\":\"The facet address.\"},\"returns\":{\"facetFunctionSelectors_\":\"facetFunctionSelectors_\"}},\"facets()\":{\"returns\":{\"facets_\":\"Facet\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"facetAddress(bytes4)\":{\"notice\":\"Gets the facet that supports the given selector.\"},\"facetAddresses()\":{\"notice\":\"Get all the facet addresses used by a diamond.\"},\"facetFunctionSelectors(address)\":{\"notice\":\"Gets all the function selectors supported by a specific facet.\"},\"facets()\":{\"notice\":\"Gets all facet addresses and their four byte function selectors.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interfaces/IDiamondLoupe.sol\":\"IDiamondLoupe\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":9000000},\"remappings\":[]},\"sources\":{\"project:/contracts/interfaces/IDiamondLoupe.sol\":{\"keccak256\":\"0xf4bc76153335588e7cb5fe1c9701857fd2ae0340ad94976adbf1c49054f82dfe\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e1deac9a609a98738f8d0d7135ba66b7242915e5700987fd7d391d1910a37754\",\"dweb:/ipfs/QmRhSzG8LvoWSSLuxw1y8mn7kAanx32MqqUhGy9CAqQrGV\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.7.6;\npragma experimental ABIEncoderV2;\n\n/******************************************************************************\\\n* Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)\n* EIP-2535 Diamond Standard: https://eips.ethereum.org/EIPS/eip-2535\n/******************************************************************************/\n\n// A loupe is a small magnifying glass used to look at diamonds.\n// These functions look at diamonds\ninterface IDiamondLoupe {\n    /// These functions are expected to be called frequently\n    /// by tools.\n\n    struct Facet {\n        address facetAddress;\n        bytes4[] functionSelectors;\n    }\n\n    /// @notice Gets all facet addresses and their four byte function selectors.\n    /// @return facets_ Facet\n    function facets() external view returns (Facet[] memory facets_);\n\n    /// @notice Gets all the function selectors supported by a specific facet.\n    /// @param _facet The facet address.\n    /// @return facetFunctionSelectors_\n    function facetFunctionSelectors(address _facet) external view returns (bytes4[] memory facetFunctionSelectors_);\n\n    /// @notice Get all the facet addresses used by a diamond.\n    /// @return facetAddresses_\n    function facetAddresses() external view returns (address[] memory facetAddresses_);\n\n    /// @notice Gets the facet that supports the given selector.\n    /// @dev If facet is not found return address(0).\n    /// @param _functionSelector The function selector.\n    /// @return facetAddress_ The facet address.\n    function facetAddress(bytes4 _functionSelector) external view returns (address facetAddress_);\n}\n",
+  "sourcePath": "/home/aaa/Documents/DeFi-Contract/contracts/interfaces/IDiamondLoupe.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/IDiamondLoupe.sol",
+    "exportedSymbols": {
+      "IDiamondLoupe": [
+        695
+      ]
+    },
+    "id": 696,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 656,
+        "literals": [
+          "solidity",
+          "^",
+          "0.7",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "32:23:8"
+      },
+      {
+        "id": 657,
+        "literals": [
+          "experimental",
+          "ABIEncoderV2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "56:33:8"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 695,
+        "linearizedBaseContracts": [
+          695
+        ],
+        "name": "IDiamondLoupe",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IDiamondLoupe.Facet",
+            "id": 663,
+            "members": [
+              {
+                "constant": false,
+                "id": 659,
+                "mutability": "mutable",
+                "name": "facetAddress",
+                "nodeType": "VariableDeclaration",
+                "scope": 663,
+                "src": "638:20:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 658,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "638:7:8",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 662,
+                "mutability": "mutable",
+                "name": "functionSelectors",
+                "nodeType": "VariableDeclaration",
+                "scope": 663,
+                "src": "668:26:8",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_bytes4_$dyn_storage_ptr",
+                  "typeString": "bytes4[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "id": 660,
+                    "name": "bytes4",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "668:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
+                    }
+                  },
+                  "id": 661,
+                  "nodeType": "ArrayTypeName",
+                  "src": "668:8:8",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bytes4_$dyn_storage_ptr",
+                    "typeString": "bytes4[]"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Facet",
+            "nodeType": "StructDefinition",
+            "scope": 695,
+            "src": "615:86:8",
+            "visibility": "public"
+          },
+          {
+            "documentation": {
+              "id": 664,
+              "nodeType": "StructuredDocumentation",
+              "src": "707:106:8",
+              "text": "@notice Gets all facet addresses and their four byte function selectors.\n @return facets_ Facet"
+            },
+            "functionSelector": "7a0ed627",
+            "id": 670,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "facets",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 665,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "833:2:8"
+            },
+            "returnParameters": {
+              "id": 669,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 668,
+                  "mutability": "mutable",
+                  "name": "facets_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 670,
+                  "src": "859:22:8",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Facet_$663_memory_ptr_$dyn_memory_ptr",
+                    "typeString": "struct IDiamondLoupe.Facet[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 666,
+                      "name": "Facet",
+                      "nodeType": "UserDefinedTypeName",
+                      "referencedDeclaration": 663,
+                      "src": "859:5:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Facet_$663_storage_ptr",
+                        "typeString": "struct IDiamondLoupe.Facet"
+                      }
+                    },
+                    "id": 667,
+                    "nodeType": "ArrayTypeName",
+                    "src": "859:7:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Facet_$663_storage_$dyn_storage_ptr",
+                      "typeString": "struct IDiamondLoupe.Facet[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "858:24:8"
+            },
+            "scope": 695,
+            "src": "818:65:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 671,
+              "nodeType": "StructuredDocumentation",
+              "src": "889:155:8",
+              "text": "@notice Gets all the function selectors supported by a specific facet.\n @param _facet The facet address.\n @return facetFunctionSelectors_"
+            },
+            "functionSelector": "adfca15e",
+            "id": 679,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "facetFunctionSelectors",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 674,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 673,
+                  "mutability": "mutable",
+                  "name": "_facet",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 679,
+                  "src": "1081:14:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 672,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1081:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1080:16:8"
+            },
+            "returnParameters": {
+              "id": 678,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 677,
+                  "mutability": "mutable",
+                  "name": "facetFunctionSelectors_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 679,
+                  "src": "1120:39:8",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bytes4_$dyn_memory_ptr",
+                    "typeString": "bytes4[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 675,
+                      "name": "bytes4",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1120:6:8",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_bytes4",
+                        "typeString": "bytes4"
+                      }
+                    },
+                    "id": 676,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1120:8:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_bytes4_$dyn_storage_ptr",
+                      "typeString": "bytes4[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1119:41:8"
+            },
+            "scope": 695,
+            "src": "1049:112:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 680,
+              "nodeType": "StructuredDocumentation",
+              "src": "1167:90:8",
+              "text": "@notice Get all the facet addresses used by a diamond.\n @return facetAddresses_"
+            },
+            "functionSelector": "52ef6b2c",
+            "id": 686,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "facetAddresses",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 681,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1285:2:8"
+            },
+            "returnParameters": {
+              "id": 685,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 684,
+                  "mutability": "mutable",
+                  "name": "facetAddresses_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 686,
+                  "src": "1311:32:8",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 682,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "1311:7:8",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 683,
+                    "nodeType": "ArrayTypeName",
+                    "src": "1311:9:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1310:34:8"
+            },
+            "scope": 695,
+            "src": "1262:83:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 687,
+              "nodeType": "StructuredDocumentation",
+              "src": "1351:219:8",
+              "text": "@notice Gets the facet that supports the given selector.\n @dev If facet is not found return address(0).\n @param _functionSelector The function selector.\n @return facetAddress_ The facet address."
+            },
+            "functionSelector": "cdffacc6",
+            "id": 694,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "facetAddress",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 690,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 689,
+                  "mutability": "mutable",
+                  "name": "_functionSelector",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 694,
+                  "src": "1597:24:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes4",
+                    "typeString": "bytes4"
+                  },
+                  "typeName": {
+                    "id": 688,
+                    "name": "bytes4",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1597:6:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes4",
+                      "typeString": "bytes4"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1596:26:8"
+            },
+            "returnParameters": {
+              "id": 693,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 692,
+                  "mutability": "mutable",
+                  "name": "facetAddress_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 694,
+                  "src": "1646:21:8",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 691,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1646:7:8",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1645:23:8"
+            },
+            "scope": 695,
+            "src": "1575:94:8",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 696,
+        "src": "505:1166:8"
+      }
+    ],
+    "src": "32:1640:8"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "project:/contracts/interfaces/IDiamondLoupe.sol",
+      "exportedSymbols": {
+        "IDiamondLoupe": [
+          695
+        ]
+      },
+      "license": "MIT"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.7",
+            ".6"
+          ]
+        },
+        "id": 656,
+        "name": "PragmaDirective",
+        "src": "32:23:8"
+      },
+      {
+        "attributes": {
+          "literals": [
+            "experimental",
+            "ABIEncoderV2"
+          ]
+        },
+        "id": 657,
+        "name": "PragmaDirective",
+        "src": "56:33:8"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            695
+          ],
+          "name": "IDiamondLoupe",
+          "scope": 696
+        },
+        "children": [
+          {
+            "attributes": {
+              "canonicalName": "IDiamondLoupe.Facet",
+              "name": "Facet",
+              "scope": 695,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "mutability": "mutable",
+                  "name": "facetAddress",
+                  "scope": 663,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "address",
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "address",
+                      "stateMutability": "nonpayable",
+                      "type": "address"
+                    },
+                    "id": 658,
+                    "name": "ElementaryTypeName",
+                    "src": "638:7:8"
+                  }
+                ],
+                "id": 659,
+                "name": "VariableDeclaration",
+                "src": "638:20:8"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "mutability": "mutable",
+                  "name": "functionSelectors",
+                  "scope": 663,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "bytes4[]",
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "type": "bytes4[]"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes4",
+                          "type": "bytes4"
+                        },
+                        "id": 660,
+                        "name": "ElementaryTypeName",
+                        "src": "668:6:8"
+                      }
+                    ],
+                    "id": 661,
+                    "name": "ArrayTypeName",
+                    "src": "668:8:8"
+                  }
+                ],
+                "id": 662,
+                "name": "VariableDeclaration",
+                "src": "668:26:8"
+              }
+            ],
+            "id": 663,
+            "name": "StructDefinition",
+            "src": "615:86:8"
+          },
+          {
+            "attributes": {
+              "functionSelector": "7a0ed627",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "facets",
+              "scope": 695,
+              "stateMutability": "view",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": "@notice Gets all facet addresses and their four byte function selectors.\n @return facets_ Facet"
+                },
+                "id": 664,
+                "name": "StructuredDocumentation",
+                "src": "707:106:8"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 665,
+                "name": "ParameterList",
+                "src": "833:2:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "facets_",
+                      "scope": 670,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "struct IDiamondLoupe.Facet[]",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "struct IDiamondLoupe.Facet[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "Facet",
+                              "referencedDeclaration": 663,
+                              "type": "struct IDiamondLoupe.Facet"
+                            },
+                            "id": 666,
+                            "name": "UserDefinedTypeName",
+                            "src": "859:5:8"
+                          }
+                        ],
+                        "id": 667,
+                        "name": "ArrayTypeName",
+                        "src": "859:7:8"
+                      }
+                    ],
+                    "id": 668,
+                    "name": "VariableDeclaration",
+                    "src": "859:22:8"
+                  }
+                ],
+                "id": 669,
+                "name": "ParameterList",
+                "src": "858:24:8"
+              }
+            ],
+            "id": 670,
+            "name": "FunctionDefinition",
+            "src": "818:65:8"
+          },
+          {
+            "attributes": {
+              "functionSelector": "adfca15e",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "facetFunctionSelectors",
+              "scope": 695,
+              "stateMutability": "view",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": "@notice Gets all the function selectors supported by a specific facet.\n @param _facet The facet address.\n @return facetFunctionSelectors_"
+                },
+                "id": 671,
+                "name": "StructuredDocumentation",
+                "src": "889:155:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_facet",
+                      "scope": 679,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 672,
+                        "name": "ElementaryTypeName",
+                        "src": "1081:7:8"
+                      }
+                    ],
+                    "id": 673,
+                    "name": "VariableDeclaration",
+                    "src": "1081:14:8"
+                  }
+                ],
+                "id": 674,
+                "name": "ParameterList",
+                "src": "1080:16:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "facetFunctionSelectors_",
+                      "scope": 679,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "bytes4[]",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "bytes4[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "bytes4",
+                              "type": "bytes4"
+                            },
+                            "id": 675,
+                            "name": "ElementaryTypeName",
+                            "src": "1120:6:8"
+                          }
+                        ],
+                        "id": 676,
+                        "name": "ArrayTypeName",
+                        "src": "1120:8:8"
+                      }
+                    ],
+                    "id": 677,
+                    "name": "VariableDeclaration",
+                    "src": "1120:39:8"
+                  }
+                ],
+                "id": 678,
+                "name": "ParameterList",
+                "src": "1119:41:8"
+              }
+            ],
+            "id": 679,
+            "name": "FunctionDefinition",
+            "src": "1049:112:8"
+          },
+          {
+            "attributes": {
+              "functionSelector": "52ef6b2c",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "facetAddresses",
+              "scope": 695,
+              "stateMutability": "view",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": "@notice Get all the facet addresses used by a diamond.\n @return facetAddresses_"
+                },
+                "id": 680,
+                "name": "StructuredDocumentation",
+                "src": "1167:90:8"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 681,
+                "name": "ParameterList",
+                "src": "1285:2:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "facetAddresses_",
+                      "scope": 686,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "address[]",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "type": "address[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "address",
+                              "stateMutability": "nonpayable",
+                              "type": "address"
+                            },
+                            "id": 682,
+                            "name": "ElementaryTypeName",
+                            "src": "1311:7:8"
+                          }
+                        ],
+                        "id": 683,
+                        "name": "ArrayTypeName",
+                        "src": "1311:9:8"
+                      }
+                    ],
+                    "id": 684,
+                    "name": "VariableDeclaration",
+                    "src": "1311:32:8"
+                  }
+                ],
+                "id": 685,
+                "name": "ParameterList",
+                "src": "1310:34:8"
+              }
+            ],
+            "id": 686,
+            "name": "FunctionDefinition",
+            "src": "1262:83:8"
+          },
+          {
+            "attributes": {
+              "functionSelector": "cdffacc6",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "facetAddress",
+              "scope": 695,
+              "stateMutability": "view",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "text": "@notice Gets the facet that supports the given selector.\n @dev If facet is not found return address(0).\n @param _functionSelector The function selector.\n @return facetAddress_ The facet address."
+                },
+                "id": 687,
+                "name": "StructuredDocumentation",
+                "src": "1351:219:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "_functionSelector",
+                      "scope": 694,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes4",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes4",
+                          "type": "bytes4"
+                        },
+                        "id": 688,
+                        "name": "ElementaryTypeName",
+                        "src": "1597:6:8"
+                      }
+                    ],
+                    "id": 689,
+                    "name": "VariableDeclaration",
+                    "src": "1597:24:8"
+                  }
+                ],
+                "id": 690,
+                "name": "ParameterList",
+                "src": "1596:26:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "facetAddress_",
+                      "scope": 694,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 691,
+                        "name": "ElementaryTypeName",
+                        "src": "1646:7:8"
+                      }
+                    ],
+                    "id": 692,
+                    "name": "VariableDeclaration",
+                    "src": "1646:21:8"
+                  }
+                ],
+                "id": 693,
+                "name": "ParameterList",
+                "src": "1645:23:8"
+              }
+            ],
+            "id": 694,
+            "name": "FunctionDefinition",
+            "src": "1575:94:8"
+          }
+        ],
+        "id": 695,
+        "name": "ContractDefinition",
+        "src": "505:1166:8"
+      }
+    ],
+    "id": 696,
+    "name": "SourceUnit",
+    "src": "32:1640:8"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.6+commit.7338295f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.16",
+  "updatedAt": "2024-07-21T15:16:48.201Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "facetAddress(bytes4)": {
+        "details": "If facet is not found return address(0).",
+        "params": {
+          "_functionSelector": "The function selector."
+        },
+        "returns": {
+          "facetAddress_": "The facet address."
+        }
+      },
+      "facetAddresses()": {
+        "returns": {
+          "facetAddresses_": "facetAddresses_"
+        }
+      },
+      "facetFunctionSelectors(address)": {
+        "params": {
+          "_facet": "The facet address."
+        },
+        "returns": {
+          "facetFunctionSelectors_": "facetFunctionSelectors_"
+        }
+      },
+      "facets()": {
+        "returns": {
+          "facets_": "Facet"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "facetAddress(bytes4)": {
+        "notice": "Gets the facet that supports the given selector."
+      },
+      "facetAddresses()": {
+        "notice": "Get all the facet addresses used by a diamond."
+      },
+      "facetFunctionSelectors(address)": {
+        "notice": "Gets all the function selectors supported by a specific facet."
+      },
+      "facets()": {
+        "notice": "Gets all facet addresses and their four byte function selectors."
+      }
+    },
+    "version": 1
+  }
+}
